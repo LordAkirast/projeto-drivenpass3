@@ -5,6 +5,7 @@ import cors from 'cors';
 import { connectDb } from './config';
 import { healthGet } from './controllers/health.controller';
 import { usersCreatePost } from './controllers/users.controller';
+import { usersLogin } from './controllers/usersLogin.controller';
 
 const app = express();
 app
@@ -12,6 +13,7 @@ app
   .use(express.json())
   .get('/health', healthGet)
   .post('/users/create', usersCreatePost)
+  .post ('/users/login', usersLogin)
 
 
 

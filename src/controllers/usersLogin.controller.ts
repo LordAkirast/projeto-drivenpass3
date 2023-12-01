@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { userService } from '@/services/users-service';
 
-export async function usersCreatePost(req: Request, res: Response) {
+export async function usersLogin(req: Request, res: Response) {
   const { email, password } = req.body;
 
   try {
-    const user = await userService.createUser({ email, password });
+    const user = await userService.loginUser({ email, password });
     return res.status(httpStatus.CREATED).json({
       id: user.id,
       email: user.email,

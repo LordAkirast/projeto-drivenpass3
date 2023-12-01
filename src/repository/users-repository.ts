@@ -2,7 +2,7 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function findByEmail(email: string, select?: Prisma.UserSelect) {
-  console.log('entrou no create/user/validate/repository/findbyemail')
+  console.log('entrou no create/user/validate/repository/findbyemaieeeel')
   const params: Prisma.UserFindUniqueArgs = {
     where: {
       email,
