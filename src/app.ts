@@ -7,6 +7,7 @@ import { healthGet } from './controllers/health.controller';
 import { usersCreatePost } from './controllers/users.controller';
 import { usersLogin } from './controllers/usersLogin.controller';
 
+///teste
 const app = express();
 app
   .use(cors())
