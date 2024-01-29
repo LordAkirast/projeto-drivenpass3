@@ -1,22 +1,41 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import { userService } from '@/services/users-service';
+
+
+const JWT_SECRET = 'hudshuhdas'
+
+
+function generateToken(userId: string): string {
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' });
+}
 
 export async function usersCreatePost(req: Request, res: Response) {
   const { email, password } = req.body;
 
   try {
-    const user = await userService.createUser({ email, password });
-    return res.status(httpStatus.CREATED).json({
-      id: user.id,
-      email: user.email,
-    });
-  } catch (error) {
   
-    if (error.code === "emailExisting_error") {
-      return res.status(httpStatus.CONFLICT).json({ error: error.message });
+    const user = await userService.validateUniqueEmailOrFail(email);
+
+    if (!user) {
+      return res.status(httpStatus.UNAUTHORIZED).json({ error: 'Usuário não encontrado' });
     }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(httpStatus.UNAUTHORIZED).json({ error: 'Senha incorreta' });
+    }
+
   
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+    const token = generateToken(user.id);
+
+
+    return res.status(httpStatus.OK).json({ token });
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor' });
   }
 }

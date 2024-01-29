@@ -66,4 +66,5 @@ export type CreateUserParams = Pick<User, 'email' | 'password'>;
 export const userService = {
   createUser,
   loginUser,
+  validateUniqueEmailOrFail,
 };
