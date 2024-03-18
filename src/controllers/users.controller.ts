@@ -8,8 +8,8 @@ import { userService } from '@/services/users-service';
 const JWT_SECRET = 'hudshuhdas'
 
 
-function generateToken(userId: string): string {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' });
+function generateToken(): string {
+  return jwt.sign({ }, JWT_SECRET, { expiresIn: '1h' });
 }
 
 export async function usersCreatePost(req: Request, res: Response) {
@@ -17,25 +17,25 @@ export async function usersCreatePost(req: Request, res: Response) {
 
   try {
   
-    const user = await userService.validateUniqueEmailOrFail(email);
+    const user: any = await userService.validateUniqueEmailOrFail(email);
 
-    if (!user) {
-      return res.status(httpStatus.UNAUTHORIZED).json({ error: 'Usuário não encontrado' });
+    if (user) {
+      return res.status(httpStatus.UNAUTHORIZED).json({ error: 'E-mail já está sendo utilizado.' });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    //const passwordMatch = await bcrypt.compare(password, user.password);
 
-    if (!passwordMatch) {
-      return res.status(httpStatus.UNAUTHORIZED).json({ error: 'Senha incorreta' });
-    }
+    //if (!passwordMatch) {
+    //  return res.status(httpStatus.UNAUTHORIZED).json({ error: 'Senha incorreta' });
+    //}
 
   
-    const token = generateToken(user.id);
+    const token = generateToken();
 
 
     return res.status(httpStatus.OK).json({ token });
   } catch (error) {
-    console.error('Erro ao fazer login:', error);
+    console.error('Erro ao criar usuário:', error);
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: 'Erro interno do servidor' });
   }
 }
